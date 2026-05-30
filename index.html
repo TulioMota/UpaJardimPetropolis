@@ -63,7 +63,7 @@
     --color-equipe-azul:     #3b82f6;
     --color-equipe-vermelho: #ef4444;
     --color-equipe-amarelo:  #f59e0b;
-    --color-equipe-rosa:     #a855f7;
+    --color-equipe-roxo:     #a855f7;
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -678,7 +678,7 @@
        vem do RLS configurado no Supabase (ver supabase-setup.sql).
        NUNCA coloque a SERVICE_ROLE key aqui.
     */
-    const SUPABASE_URL     = https://vwpexqtezgptqnommvfk.supabase.co';
+    const SUPABASE_URL     = 'https://vwpexqtezgptqnommvfk.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ3cGV4cXRlemdwdHFub21tdmZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMzM3MDMsImV4cCI6MjA5NTcwOTcwM30.vKen_FFf58AQd0TUBCVqyrFQfjNSgbzqT2Vcz4Lhj8E';
 
 
@@ -822,13 +822,6 @@
       elBtn.disabled = !ok;
     }
 
-    function updateRateBar() {
-      const used = RATE_LIMIT.MAX_QUERIES - RATE_LIMIT.remaining();
-      const pct  = (used / RATE_LIMIT.MAX_QUERIES) * 100;
-      elRateLbl.textContent = `${used}/${RATE_LIMIT.MAX_QUERIES} consultas`;
-      elRateFill.style.width = pct + '%';
-      elRateWrap.style.display = used > 0 ? 'flex' : 'none';
-    }
 
     /* ── DROPDOWN ── */
     function openDropdown()  {
