@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── SEO básico ── -->
+  <title>Consulta de Equipe — Jardim Petrópolis · Betim MG</title>
+  <meta name="description" content="Descubra a qual equipe seu endereço pertence no Jardim Petrópolis, Betim - MG." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- ── Segurança: Content Security Policy ──
+       Permite apenas recursos do próprio domínio + Supabase + Google Fonts.
+       Substitua SEU-PROJETO pelo subdomínio real do seu projeto Supabase.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src  'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+      style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src    https://fonts.gstatic.com;
+      connect-src 'self' https://*.supabase.co;
+      img-src     'self' data:;
+      frame-ancestors 'none';
+    " />
+
+  <!-- ── Segurança: outros headers via meta (complemento ao _headers do GitHub Pages) ── -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:            #0f1117;
+      --surface:       #181c27;
+      --surface-2:     #1f2435;
+      --border:        rgba(255,255,255,0.08);
+      --border-focus:  rgba(255,255,255,0.22);
+      --text-1:        #f0f2f8;
+      --text-2:        #8b91a8;
+      --text-3:        #555d76;
+      --accent:        #4f8ef7;
+      --accent-glow:   rgba(79,142,247,0.18);
+      --accent-hover:  #3a7aee;
+      --radius-sm:     8px;
+      --radius:        14px;
+      --radius-lg:     20px;
+      --shadow:        0 2px 16px rgba(0,0,0,0.4);
+      --shadow-lg:     0 8px 40px rgba(0,0,0,0.5);
+      --font-display:  'Syne', sans-serif;
+      --font-body:     'DM Sans', sans-serif;
+      --transition:    0.18s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* Equipes — cores personalizáveis */
+    --color-equipe-verde:    #22c55e;
+    --color-equipe-azul:     #3b82f6;
+    --color-equipe-vermelho: #ef4444;
+    --color-equipe-amarelo:  #f59e0b;
+    --color-equipe-roxo:     #a855f7;
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 56px 16px 100px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Fundo decorativo */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 10%, rgba(79,142,247,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 85% 90%, rgba(79,142,247,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Grid decorativo */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      margin-bottom: 52px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-glow);
+      border: 1px solid rgba(79,142,247,0.25);
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 22px;
+    }
+
+    .badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-dot 2s ease infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 6vw, 52px);
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--text-1);
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    header p {
+      font-size: 15px;
+      color: var(--text-2);
+      line-height: 1.65;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px; }
+    }
+
+    /* ── RÓTULOS ── */
+    .field { margin-bottom: 20px; }
+
+    .field-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-display);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-bottom: 9px;
+    }
+
+    .field-label svg { opacity: 0.6; }
+
+    /* ── COMBOBOX (rua) ── */
+    .combobox { position: relative; }
+
+    .combobox-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .combobox-input-wrap input,
+    .number-input {
+      width: 100%;
+      padding: 13px 44px 13px 16px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--text-1);
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .number-input { padding-right: 16px; }
+
+    .combobox-input-wrap input:focus,
+    .number-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .combobox-input-wrap input::placeholder,
+    .number-input::placeholder {
+      color: var(--text-3);
+    }
+
+    .chevron {
+      position: absolute;
+      right: 14px;
+      color: var(--text-3);
+      pointer-events: none;
+      transition: transform var(--transition);
+    }
+
+    .chevron.open { transform: rotate(180deg); }
+
+    /* ── DROPDOWN ── */
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0; right: 0;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border-focus);
+      border-radius: var(--radius);
+      max-height: 240px;
+      overflow-y: auto;
+      z-index: 200;
+      display: none;
+      box-shadow: var(--shadow-lg);
+      animation: dropIn 0.15s ease;
+    }
+
+    .dropdown.open { display: block; }
+
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .dropdown::-webkit-scrollbar { width: 5px; }
+    .dropdown::-webkit-scrollbar-track { background: transparent; }
+    .dropdown::-webkit-scrollbar-thumb { background: var(--border-focus); border-radius: 4px; }
+
+    .dropdown-item {
+      padding: 11px 16px;
+      font-size: 14px;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dropdown-item:last-child { border-bottom: none; }
+
+    .dropdown-item:hover,
+    .dropdown-item[aria-selected="true"] {
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+
+    .dropdown-msg {
+      padding: 20px 16px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 13px;
+    }
+
+    .dropdown-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 18px 16px;
+      color: var(--text-3);
+      font-size: 13px;
+    }
+
+    /* ── CAMPO SELECIONADO ── */
+    .selected-chip {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    .selected-chip.show { display: flex; }
+
+    .selected-chip button {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      transition: color var(--transition);
+      padding: 0 2px;
+    }
+
+    .selected-chip button:hover { color: var(--text-1); }
+
+    /* ── ROW CAMPOS ── */
+    .fields-row {
+      display: grid;
+      grid-template-columns: 1fr 130px;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 400px) {
+      .fields-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── BOTÃO CONSULTAR ── */
+    .btn-confirm {
+      width: 100%;
+      padding: 15px 20px;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+    }
+
+    .btn-confirm:hover:not(:disabled) {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(79,142,247,0.35);
+    }
+
+    .btn-confirm:active:not(:disabled) { transform: translateY(0); }
+
+    .btn-confirm:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 17px; height: 17px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── PAINEL DE RESULTADO ── */
+    .result {
+      margin-top: 28px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: none;
+      animation: fadeUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .result.show { display: block; }
+
+    .result-top {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .result-swatch {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .result-swatch::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+    }
+
+    .result-meta { flex: 1; min-width: 0; }
+
+    .result-meta-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+      margin-bottom: 3px;
+    }
+
+    .result-meta-addr {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .result-equipe {
+      padding: 20px 24px 24px;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .result-footer {
+      padding: 12px 24px;
+      font-size: 12px;
+      color: var(--text-3);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── ALERTA ── */
+    .alert {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      line-height: 1.5;
+      display: none;
+      animation: fadeUp 0.2s ease;
+    }
+
+    .alert.show { display: flex; align-items: flex-start; gap: 10px; }
+
+    .alert-warn {
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.25);
+      color: #fbbf24;
+    }
+
+    .alert-error {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
+      color: #f87171;
+    }
+
+    .alert-info {
+      background: rgba(79,142,247,0.08);
+      border: 1px solid rgba(79,142,247,0.2);
+      color: #93bbfc;
+    }
+
+    .alert svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── RATE LIMIT VISUAL ── */
+    .rate-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-size: 11.5px;
+      color: var(--text-3);
+    }
+
+    .rate-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .rate-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 12px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.5s 0.3s ease both;
+    }
+
+    footer a {
+      color: var(--text-2);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    footer a:hover { color: var(--text-1); }
+
+    .disclaimer {
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--text-3);
+      line-height: 1.7;
+      max-width: 500px;
+      text-align: left;
+    }
+
+    .disclaimer strong {
+      color: var(--text-2);
+      font-weight: 500;
+    }
+
+    /* ── ANIMAÇÕES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── ACESSIBILIDADE ── */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── CABEÇALHO ── -->
+  <header>
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Betim · Minas Gerais · Brasil
+    </div>
+    <h1>Jardim<br /><em>Petrópolis</em></h1>
+    <p>Informe seu endereço completo para descobrir a qual equipe seu domicílio pertence.</p>
+  </header>
+
+  <!-- ── CARD PRINCIPAL ── -->
+  <main class="card" role="main">
+    <div class="fields-row">
+
+      <!-- Campo: Rua -->
+      <div class="field">
+        <label class="field-label" for="input-rua">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          Rua / Avenida
+        </label>
+        <div class="combobox" id="combobox">
+          <div class="combobox-input-wrap">
+            <input
+              type="text"
+              id="input-rua"
+              name="rua"
+              placeholder="Digite sua rua…"
+              autocomplete="off"
+              spellcheck="false"
+              maxlength="120"
+              aria-autocomplete="list"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="dropdown-list"
+              aria-label="Nome da rua"
+              inputmode="text"
+            />
+            <svg class="chevron" id="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <ul class="dropdown" id="dropdown-list" role="listbox" aria-label="Ruas disponíveis"></ul>
+          <div class="selected-chip" id="chip-rua" role="status" aria-live="polite">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="chip-label">—</span>
+            <button id="btn-clear-rua" aria-label="Limpar seleção de rua" title="Limpar">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campo: Número -->
+      <div class="field">
+        <label class="field-label" for="input-numero">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+          Número
+        </label>
+        <input
+          type="number"
+          id="input-numero"
+          name="numero"
+          class="number-input"
+          placeholder="Ex: 123"
+          min="1"
+          max="99999"
+          maxlength="5"
+          aria-label="Número do imóvel"
+          inputmode="numeric"
+        />
+      </div>
+    </div>
+
+    <!-- Botão -->
+    <button class="btn-confirm" id="btn-confirm" disabled aria-busy="false">
+      <svg id="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <div class="spinner" id="btn-spinner" aria-hidden="true"></div>
+      <span id="btn-label">Consultar Equipe</span>
+    </button>
+
+    <!-- Alerta / Feedback -->
+    <div class="alert" id="alert" role="alert" aria-live="assertive"></div>
+
+    <!-- Barra visual de limite de consultas -->
+    <div class="rate-bar-wrap" id="rate-bar-wrap" aria-hidden="true" style="display:none">
+      <span id="rate-label">0/10 consultas</span>
+      <div class="rate-bar">
+        <div class="rate-bar-fill" id="rate-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Resultado -->
+    <div class="result" id="result" aria-live="polite" aria-label="Resultado da consulta">
+      <div class="result-top">
+        <div class="result-swatch" id="result-swatch" aria-hidden="true"></div>
+        <div class="result-meta">
+          <div class="result-meta-label">Endereço consultado</div>
+          <div class="result-meta-addr" id="result-addr">—</div>
+        </div>
+      </div>
+      <div class="result-equipe" id="result-equipe" aria-label="Equipe">—</div>
+      <div class="result-footer">Jardim Petrópolis · Betim · Minas Gerais</div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Jardim Petrópolis · Betim · MG</p>
+    <p style="margin-top:6px">Dúvidas? Fale com a administração do bairro.</p>
+    <div class="disclaimer" role="note">
+      <strong>⚠️ Aviso importante:</strong> Este site é um projeto estritamente acadêmico e estudantil.
+      Não possui fins lucrativos e não tem qualquer vínculo oficial com o Sistema Único de Saúde (SUS),
+      Prefeitura Municipal ou órgãos governamentais. Os dados aqui apresentados são simulados/públicos
+      e servem apenas para fins pedagógicos.
+    </div>
+  </footer>
+
+  <!-- ── SUPABASE JS (CDN — versão fixada para evitar breaking changes) ── -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"
+    integrity="sha256-C2fCbr3sALYaVKGcWM4+CXkqcHOCWZ3zDNVFvFWH4Kk="
+    crossorigin="anonymous"></script>
+
+  <script>
+    'use strict';
+
+    /* ══════════════════════════════════════════════════════════
+       ⚙️  CONFIGURAÇÃO — substitua pelos seus valores reais
+       ══════════════════════════════════════════════════════════
+       A ANON KEY é segura para o frontend; a segurança real
+       vem do RLS configurado no Supabase (ver supabase-setup.sql).
+       NUNCA coloque a SERVICE_ROLE key aqui.
+    */
+    const SUPABASE_URL     = '__SUPABASE_URL__';
+    const SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
+
+    /* ══════════════════════════════════════════════════════════
+       🔒 RATE LIMITING — client-side
+       Limite: MAX_QUERIES consultas por janela de WINDOW_MS ms.
+       Isso não substitui RLS, mas reduz abuso acidental/casual.
+    ══════════════════════════════════════════════════════════ */
+    const RATE_LIMIT = {
+      MAX_QUERIES: 10,
+      WINDOW_MS:   60_000,  // 1 minuto
+      _timestamps: [],
+
+      canQuery() {
+        const now = Date.now();
+        this._timestamps = this._timestamps.filter(t => now - t < this.WINDOW_MS);
+        return this._timestamps.length < this.MAX_QUERIES;
+      },
+
+      record() {
+        this._timestamps.push(Date.now());
+      },
+
+      remaining() {
+        const now = Date.now();
+        this._timestamps = this._timestamps.filter(t => now - t < this.WINDOW_MS);
+        return this.MAX_QUERIES - this._timestamps.length;
+      },
+
+      resetIn() {
+        if (this._timestamps.length === 0) return 0;
+        const oldest = Math.min(...this._timestamps);
+        return Math.ceil((this.WINDOW_MS - (Date.now() - oldest)) / 1000);
+      }
+    };
+
+    /* ══════════════════════════════════════════════════════════
+       🛡️  SANITIZAÇÃO de entrada
+    ══════════════════════════════════════════════════════════ */
+    const Sanitize = {
+      /** Remove caracteres que não pertencem a nomes de rua */
+      rua(raw) {
+        if (typeof raw !== 'string') return '';
+        return raw
+          .trim()
+          .replace(/[<>"'`;]/g, '')   // remove chars perigosos
+          .replace(/\s+/g, ' ')       // normaliza espaços
+          .substring(0, 120);         // limite de comprimento
+      },
+
+      /** Valida número de imóvel */
+      numero(raw) {
+        const n = parseInt(raw, 10);
+        if (isNaN(n) || n <= 0 || n > 99999) return null;
+        return n;
+      },
+
+      /** Normaliza texto para comparação (remove acentos, lowercase) */
+      normalize(str) {
+        return str
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim();
+      }
+    };
+
+    /* ══════════════════════════════════════════════════════════
+       🗄️  SUPABASE — inicialização
+    ══════════════════════════════════════════════════════════ */
+    let supabase;
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: false,      // não persiste sessão (usuário anônimo)
+          autoRefreshToken: false,
+        },
+        global: {
+          headers: {
+            'X-Client-Info': 'jardim-petropolis/1.0',
+          },
+        },
+      });
+    } catch (err) {
+      console.error('[Supabase] Falha ao inicializar:', err.message);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       🎨  MAPA DE CORES POR EQUIPE
+       Adicione ou edite conforme suas equipes reais.
+    ══════════════════════════════════════════════════════════ */
+    const EQUIPE_CORES = {
+      'equipe verde':    { bg: '#22c55e', text: '#fff' },
+      'equipe azul':     { bg: '#3b82f6', text: '#fff' },
+      'equipe vermelha': { bg: '#ef4444', text: '#fff' },
+      'equipe amarela':  { bg: '#f59e0b', text: '#1a1714' },
+      'equipe roxa':     { bg: '#a855f7', text: '#fff' },
+      // fallback
+      _default:          { bg: '#4f8ef7', text: '#fff' },
+    };
+
+    function coresEquipe(nome) {
+      const key = (nome || '').toLowerCase().trim();
+      return EQUIPE_CORES[key] || EQUIPE_CORES._default;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       📦  ESTADO LOCAL
+    ══════════════════════════════════════════════════════════ */
+    const State = {
+      ruaSelecionada: null,   // string | null
+      loading: false,
+      dropdownOpen: false,
+    };
+
+    /* ══════════════════════════════════════════════════════════
+       🔗  ELEMENTOS DO DOM
+    ══════════════════════════════════════════════════════════ */
+    const $ = id => document.getElementById(id);
+    const elRua     = $('input-rua');
+    const elNumero  = $('input-numero');
+    const elDrop    = $('dropdown-list');
+    const elChevron = $('chevron');
+    const elChip    = $('chip-rua');
+    const elChipLbl = $('chip-label');
+    const elBtnClear = $('btn-clear-rua');
+    const elBtn     = $('btn-confirm');
+    const elBtnIcon = $('btn-icon');
+    const elSpinner = $('btn-spinner');
+    const elBtnLbl  = $('btn-label');
+    const elAlert   = $('alert');
+    const elResult  = $('result');
+    const elRateLbl = $('rate-label');
+    const elRateFill = $('rate-fill');
+    const elRateWrap = $('rate-bar-wrap');
+
+    /* ══════════════════════════════════════════════════════════
+       📣  UTILITÁRIOS DE UI
+    ══════════════════════════════════════════════════════════ */
+    function showAlert(msg, type = 'warn') {
+      const icons = {
+        warn:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+        error: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+        info:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+      };
+      elAlert.className = `alert alert-${type} show`;
+      elAlert.innerHTML = (icons[type] || '') + `<span>${msg}</span>`;
+    }
+
+    function hideAlert() {
+      elAlert.className = 'alert';
+      elAlert.textContent = '';
+    }
+
+    function setLoading(v) {
+      State.loading = v;
+      elBtn.disabled = v;
+      elBtn.setAttribute('aria-busy', String(v));
+      elBtnIcon.style.display   = v ? 'none' : '';
+      elSpinner.style.display   = v ? 'block' : 'none';
+      elBtnLbl.textContent      = v ? 'Consultando…' : 'Consultar Equipe';
+    }
+
+    function updateConfirmBtn() {
+      const ok = State.ruaSelecionada && elNumero.value.trim() !== '' && !State.loading;
+      elBtn.disabled = !ok;
+    }
+
+    function updateRateBar() {
+      const used = RATE_LIMIT.MAX_QUERIES - RATE_LIMIT.remaining();
+      const pct  = (used / RATE_LIMIT.MAX_QUERIES) * 100;
+      elRateLbl.textContent = `${used}/${RATE_LIMIT.MAX_QUERIES} consultas`;
+      elRateFill.style.width = pct + '%';
+      elRateWrap.style.display = used > 0 ? 'flex' : 'none';
+    }
+
+    /* ── DROPDOWN ── */
+    function openDropdown()  {
+      State.dropdownOpen = true;
+      elDrop.classList.add('open');
+      elChevron.classList.add('open');
+      elRua.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeDropdown() {
+      State.dropdownOpen = false;
+      elDrop.classList.remove('open');
+      elChevron.classList.remove('open');
+      elRua.setAttribute('aria-expanded', 'false');
+    }
+
+    function renderDropdownItems(ruas) {
+      elDrop.innerHTML = '';
+      if (ruas.length === 0) {
+        elDrop.innerHTML = '<li class="dropdown-msg" role="option">Nenhuma rua encontrada.</li>';
+        return;
+      }
+      ruas.forEach((nome, i) => {
+        const li = document.createElement('li');
+        li.className = 'dropdown-item';
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', 'false');
+        li.setAttribute('tabindex', '-1');
+        li.textContent = nome;
+        li.dataset.nome = nome;
+        li.addEventListener('mousedown', e => { e.preventDefault(); selectRua(nome); });
+        elDrop.appendChild(li);
+      });
+    }
+
+    function setActiveItem(index) {
+      const items = elDrop.querySelectorAll('.dropdown-item[role="option"]');
+      items.forEach((el, i) => {
+        const active = i === index;
+        el.setAttribute('aria-selected', String(active));
+        if (active) el.scrollIntoView({ block: 'nearest' });
+      });
+    }
+
+    /* ── SELEÇÃO DE RUA ── */
+    function selectRua(nome) {
+      State.ruaSelecionada = nome;
+      elRua.value = nome;
+      elChipLbl.textContent = nome;
+      elChip.classList.add('show');
+      closeDropdown();
+      hideAlert();
+      updateConfirmBtn();
+      elNumero.focus();
+    }
+
+    function clearRua() {
+      State.ruaSelecionada = null;
+      elRua.value = '';
+      elChip.classList.remove('show');
+      elDrop.innerHTML = '';
+      hideAlert();
+      elResult.classList.remove('show');
+      updateConfirmBtn();
+      elRua.focus();
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       🌐  CHAMADAS AO SUPABASE
+    ══════════════════════════════════════════════════════════ */
+
+    /** Autocomplete: busca ruas via RPC (sem expor números/equipes) */
+    let autocompleteTimer = null;
+    async function fetchRuas(filtro) {
+      if (!supabase) return;
+
+      elDrop.innerHTML = '<li class="dropdown-loading" role="option"><div class="spinner" style="display:block;border-color:rgba(255,255,255,.15);border-top-color:var(--accent)"></div> Buscando…</li>';
+      openDropdown();
+
+      try {
+        const { data, error } = await supabase
+          .rpc('listar_ruas', { p_filtro: Sanitize.rua(filtro) });
+
+        if (error) throw error;
+
+        const ruas = (data || []).map(r => r.nome_rua);
+        renderDropdownItems(ruas);
+        if (ruas.length > 0) openDropdown();
+      } catch (err) {
+        // Não expõe detalhes de erro ao usuário
+        console.error('[fetchRuas]', err.message);
+        elDrop.innerHTML = '<li class="dropdown-msg" role="option">Erro ao buscar ruas. Tente novamente.</li>';
+      }
+    }
+
+    /** Consulta principal: busca equipe via RPC */
+    async function consultarEquipe(nomRua, numero) {
+      if (!supabase) {
+        showAlert('Configuração do banco de dados não encontrada.', 'error');
+        return;
+      }
+
+      if (!RATE_LIMIT.canQuery()) {
+        const seg = RATE_LIMIT.resetIn();
+        showAlert(`Limite de consultas atingido. Aguarde ${seg}s antes de tentar novamente.`, 'warn');
+        return;
+      }
+
+      setLoading(true);
+      hideAlert();
+      elResult.classList.remove('show');
+
+      try {
+        RATE_LIMIT.record();
+        updateRateBar();
+
+        const { data, error } = await supabase
+          .rpc('buscar_endereco', {
+            p_nome_rua: Sanitize.rua(nomRua),
+            p_numero:   numero,
+          });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          showAlert(
+            'Endereço não encontrado em nossa base. Verifique os dados e tente novamente, ou entre em contato com a administração.',
+            'info'
+          );
+          return;
+        }
+
+        const equipe = data[0].equipe;
+        exibirResultado(nomRua, numero, equipe);
+
+      } catch (err) {
+        console.error('[consultarEquipe]', err.message);
+        // Mensagem genérica — não vaza detalhes técnicos
+        showAlert('Ocorreu um erro ao consultar. Tente novamente em instantes.', 'error');
+      } finally {
+        setLoading(false);
+        updateConfirmBtn();
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       🎨  EXIBIR RESULTADO
+    ══════════════════════════════════════════════════════════ */
+    function exibirResultado(rua, numero, equipe) {
+      const cores = coresEquipe(equipe);
+      const swatch = $('result-swatch');
+      const addr   = $('result-addr');
+      const eq     = $('result-equipe');
+
+      swatch.style.background = cores.bg;
+      addr.textContent        = `${rua}, ${numero}`;
+      eq.textContent          = equipe;
+      eq.style.color          = cores.bg;
+
+      elResult.style.background   = cores.bg + '12';
+      elResult.style.borderColor  = cores.bg + '40';
+
+      // Re-trigger animação
+      elResult.classList.remove('show');
+      void elResult.offsetWidth;
+      elResult.classList.add('show');
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       📎  EVENTOS
+    ══════════════════════════════════════════════════════════ */
+    let dropdownActiveIndex = -1;
+
+    elRua.addEventListener('focus', () => {
+      if (elRua.value.trim().length >= 2) {
+        fetchRuas(elRua.value);
+      } else {
+        openDropdown();
+        elDrop.innerHTML = '<li class="dropdown-msg" role="option">Digite ao menos 2 caracteres…</li>';
+      }
+    });
+
+    elRua.addEventListener('input', () => {
+      State.ruaSelecionada = null;
+      elChip.classList.remove('show');
+      updateConfirmBtn();
+      elResult.classList.remove('show');
+      hideAlert();
+
+      clearTimeout(autocompleteTimer);
+      const val = elRua.value.trim();
+
+      if (val.length < 2) {
+        elDrop.innerHTML = '<li class="dropdown-msg" role="option">Digite ao menos 2 caracteres…</li>';
+        openDropdown();
+        return;
+      }
+
+      // Debounce 300ms para não bombardear o Supabase a cada tecla
+      autocompleteTimer = setTimeout(() => fetchRuas(val), 300);
+    });
+
+    elRua.addEventListener('keydown', e => {
+      const items = Array.from(elDrop.querySelectorAll('.dropdown-item[role="option"]'));
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        dropdownActiveIndex = Math.min(dropdownActiveIndex + 1, items.length - 1);
+        setActiveItem(dropdownActiveIndex);
+        if (!State.dropdownOpen) openDropdown();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        dropdownActiveIndex = Math.max(dropdownActiveIndex - 1, 0);
+        setActiveItem(dropdownActiveIndex);
+      } else if (e.key === 'Enter') {
+        if (dropdownActiveIndex >= 0 && items[dropdownActiveIndex]) {
+          selectRua(items[dropdownActiveIndex].dataset.nome);
+          dropdownActiveIndex = -1;
+        }
+      } else if (e.key === 'Escape') {
+        closeDropdown();
+      }
+    });
+
+    // Fecha dropdown ao clicar fora
+    document.addEventListener('click', e => {
+      if (!document.getElementById('combobox').contains(e.target)) {
+        closeDropdown();
+      }
+    });
+
+    elBtnClear.addEventListener('click', clearRua);
+
+    elNumero.addEventListener('input', updateConfirmBtn);
+
+    elNumero.addEventListener('keydown', e => {
+      // Bloqueia 'e', '+', '-' que o browser aceita em type=number
+      if (['e', 'E', '+', '-', '.', ','].includes(e.key)) e.preventDefault();
+    });
+
+    // Confirmar com Enter no campo número
+    elNumero.addEventListener('keypress', e => {
+      if (e.key === 'Enter' && !elBtn.disabled) elBtn.click();
+    });
+
+    elBtn.addEventListener('click', () => {
+      const rua    = Sanitize.rua(State.ruaSelecionada || '');
+      const numero = Sanitize.numero(elNumero.value);
+
+      if (!rua || rua.length < 3) {
+        showAlert('Selecione uma rua válida na lista.', 'warn');
+        elRua.focus();
+        return;
+      }
+
+      if (numero === null) {
+        showAlert('Informe um número de imóvel válido (1 a 99999).', 'warn');
+        elNumero.focus();
+        return;
+      }
+
+      consultarEquipe(rua, numero);
+    });
+  </script>
+</body>
+</html>
