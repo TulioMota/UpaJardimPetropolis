@@ -63,7 +63,7 @@
     --color-equipe-azul:     #3b82f6;
     --color-equipe-vermelho: #ef4444;
     --color-equipe-amarelo:  #f59e0b;
-    --color-equipe-roxo:     #a855f7;
+    --color-equipe-rosa:     #a855f7;
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -339,12 +339,13 @@
     /* ── ROW CAMPOS ── */
     .fields-row {
       display: grid;
-      grid-template-columns: 1fr 130px;
+      grid-template-columns: 1fr 120px;
       gap: 14px;
       margin-bottom: 24px;
+      align-items: start;
     }
 
-    @media (max-width: 400px) {
+    @media (max-width: 480px) {
       .fields-row { grid-template-columns: 1fr; }
     }
 
@@ -498,30 +499,7 @@
 
     .alert svg { flex-shrink: 0; margin-top: 1px; }
 
-    /* ── RATE LIMIT VISUAL ── */
-    .rate-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 14px;
-      font-size: 11.5px;
-      color: var(--text-3);
-    }
 
-    .rate-bar {
-      flex: 1;
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .rate-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 2px;
-      transition: width 0.3s ease;
-    }
 
     /* ── FOOTER ── */
     footer {
@@ -660,13 +638,7 @@
     <!-- Alerta / Feedback -->
     <div class="alert" id="alert" role="alert" aria-live="assertive"></div>
 
-    <!-- Barra visual de limite de consultas -->
-    <div class="rate-bar-wrap" id="rate-bar-wrap" aria-hidden="true" style="display:none">
-      <span id="rate-label">0/10 consultas</span>
-      <div class="rate-bar">
-        <div class="rate-bar-fill" id="rate-fill" style="width:0%"></div>
-      </div>
-    </div>
+
 
     <!-- Resultado -->
     <div class="result" id="result" aria-live="polite" aria-label="Resultado da consulta">
@@ -706,41 +678,10 @@
        vem do RLS configurado no Supabase (ver supabase-setup.sql).
        NUNCA coloque a SERVICE_ROLE key aqui.
     */
-    const SUPABASE_URL     = 'https://vwpexqtezgptqnommvfk.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ3cGV4cXRlemdwdHFub21tdmZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMzM3MDMsImV4cCI6MjA5NTcwOTcwM30.vKen_FFf58AQd0TUBCVqyrFQfjNSgbzqT2Vcz4Lhj8E';
+    const SUPABASE_URL     = '__SUPABASE_URL__';
+    const SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
 
-    /* ══════════════════════════════════════════════════════════
-       🔒 RATE LIMITING — client-side
-       Limite: MAX_QUERIES consultas por janela de WINDOW_MS ms.
-       Isso não substitui RLS, mas reduz abuso acidental/casual.
-    ══════════════════════════════════════════════════════════ */
-    const RATE_LIMIT = {
-      MAX_QUERIES: 10,
-      WINDOW_MS:   60_000,  // 1 minuto
-      _timestamps: [],
 
-      canQuery() {
-        const now = Date.now();
-        this._timestamps = this._timestamps.filter(t => now - t < this.WINDOW_MS);
-        return this._timestamps.length < this.MAX_QUERIES;
-      },
-
-      record() {
-        this._timestamps.push(Date.now());
-      },
-
-      remaining() {
-        const now = Date.now();
-        this._timestamps = this._timestamps.filter(t => now - t < this.WINDOW_MS);
-        return this.MAX_QUERIES - this._timestamps.length;
-      },
-
-      resetIn() {
-        if (this._timestamps.length === 0) return 0;
-        const oldest = Math.min(...this._timestamps);
-        return Math.ceil((this.WINDOW_MS - (Date.now() - oldest)) / 1000);
-      }
-    };
 
     /* ══════════════════════════════════════════════════════════
        🛡️  SANITIZAÇÃO de entrada
@@ -812,7 +753,7 @@
       'equipe azul':     { bg: '#3b82f6', text: '#fff' },
       'equipe vermelha': { bg: '#ef4444', text: '#fff' },
       'equipe amarela':  { bg: '#f59e0b', text: '#1a1714' },
-      'equipe rosa':     { bg: '#a855f7', text: '#fff' },
+      'equipe roxa':     { bg: '#a855f7', text: '#fff' },
       // fallback
       _default:          { bg: '#4f8ef7', text: '#fff' },
     };
@@ -848,9 +789,6 @@
     const elBtnLbl  = $('btn-label');
     const elAlert   = $('alert');
     const elResult  = $('result');
-    const elRateLbl = $('rate-label');
-    const elRateFill = $('rate-fill');
-    const elRateWrap = $('rate-bar-wrap');
 
     /* ══════════════════════════════════════════════════════════
        📣  UTILITÁRIOS DE UI
@@ -998,20 +936,11 @@
         return;
       }
 
-      if (!RATE_LIMIT.canQuery()) {
-        const seg = RATE_LIMIT.resetIn();
-        showAlert(`Limite de consultas atingido. Aguarde ${seg}s antes de tentar novamente.`, 'warn');
-        return;
-      }
-
       setLoading(true);
       hideAlert();
       elResult.classList.remove('show');
 
       try {
-        RATE_LIMIT.record();
-        updateRateBar();
-
         const { data, error } = await supabase
           .rpc('buscar_endereco', {
             p_nome_rua: Sanitize.rua(nomRua),
