@@ -635,15 +635,18 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
           Número
         </label>
-          <input
-            type="text"
-            id="input-numero"
-            class="number-input"
-            placeholder="Ex: 123, 45A, 10 AP2"
-            maxlength="20"
-            aria-label="Número do imóvel"
-            inputmode="text"
-          />
+        <input
+          type="number"
+          id="input-numero"
+          name="numero"
+          class="number-input"
+          placeholder="Ex: 123"
+          min="1"
+          max="99999"
+          maxlength="5"
+          aria-label="Número do imóvel"
+          inputmode="numeric"
+        />
       </div>
     </div>
 
@@ -756,12 +759,11 @@
       },
 
       /** Valida número de imóvel */
-    numero(raw) {
-      if (typeof raw !== 'string') return null;
-      const val = raw.trim().toUpperCase();
-      if (val.length === 0 || val.length > 20) return null;
-      return val;
-    },
+      numero(raw) {
+        const n = parseInt(raw, 10);
+        if (isNaN(n) || n <= 0 || n > 99999) return null;
+        return n;
+      },
 
       /** Normaliza texto para comparação (remove acentos, lowercase) */
       normalize(str) {
@@ -776,21 +778,31 @@
     /* ══════════════════════════════════════════════════════════
        🗄️  SUPABASE — inicialização
     ══════════════════════════════════════════════════════════ */
+    // Detecta se as credenciais ainda são placeholders (deploy incompleto)
+    const CONFIG_OK =
+      SUPABASE_URL      !== '__SUPABASE_URL__' &&
+      SUPABASE_ANON_KEY !== '__SUPABASE_ANON_KEY__' &&
+      SUPABASE_URL.startsWith('https://');
+
     let supabase;
-    try {
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: {
-          persistSession: false,      // não persiste sessão (usuário anônimo)
-          autoRefreshToken: false,
-        },
-        global: {
-          headers: {
-            'X-Client-Info': 'jardim-petropolis/1.0',
+    if (!CONFIG_OK) {
+      console.error('[Supabase] Credenciais não configuradas. Verifique os GitHub Secrets e o workflow de deploy.');
+    } else {
+      try {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          auth: {
+            persistSession: false,
+            autoRefreshToken: false,
           },
-        },
-      });
-    } catch (err) {
-      console.error('[Supabase] Falha ao inicializar:', err.message);
+          global: {
+            headers: {
+              'X-Client-Info': 'jardim-petropolis/1.0',
+            },
+          },
+        });
+      } catch (err) {
+        console.error('[Supabase] Falha ao inicializar:', err.message);
+      }
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -955,7 +967,13 @@
     /** Autocomplete: busca ruas via RPC (sem expor números/equipes) */
     let autocompleteTimer = null;
     async function fetchRuas(filtro) {
-      if (!supabase) return;
+      if (!supabase) {
+        elDrop.innerHTML = CONFIG_OK
+          ? '<li class="dropdown-msg" role="option">Erro de conexão. Recarregue a página.</li>'
+          : '<li class="dropdown-msg" role="option">⚠️ Banco não configurado. Verifique os GitHub Secrets.</li>';
+        openDropdown();
+        return;
+      }
 
       elDrop.innerHTML = '<li class="dropdown-loading" role="option"><div class="spinner" style="display:block;border-color:rgba(255,255,255,.15);border-top-color:var(--accent)"></div> Buscando…</li>';
       openDropdown();
@@ -968,9 +986,8 @@
 
         const ruas = (data || []).map(r => r.nome_rua);
         renderDropdownItems(ruas);
-        if (ruas.length > 0) openDropdown();
+        openDropdown();
       } catch (err) {
-        // Não expõe detalhes de erro ao usuário
         console.error('[fetchRuas]', err.message);
         elDrop.innerHTML = '<li class="dropdown-msg" role="option">Erro ao buscar ruas. Tente novamente.</li>';
       }
