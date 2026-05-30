@@ -1,0 +1,38 @@
+name: Keep Alive — Supabase
+
+on:
+  schedule:
+    # Roda a cada 3 dias às 08:00 UTC (05:00 horário de Brasília)
+    # Supabase pausa projetos free após 7 dias sem atividade
+    - cron: '0 8 * * *' 
+  workflow_dispatch: # permite rodar manualmente se precisar
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Supabase
+        env:
+          SUPABASE_URL:      ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          echo "Enviando ping para o Supabase..."
+
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            --max-time 15 \
+            -X POST \
+            "${SUPABASE_URL}/rest/v1/rpc/listar_ruas" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            -H "Content-Type: application/json" \
+            -d '{"p_filtro": ""}')
+
+          echo "HTTP status: $RESPONSE"
+
+          if [ "$RESPONSE" = "200" ]; then
+            echo "✅ Banco respondeu corretamente."
+          else
+            echo "⚠️ Resposta inesperada: $RESPONSE"
+            exit 1
+          fi
