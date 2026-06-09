@@ -2,9 +2,9 @@ name: Keep Alive — Supabase
 
 on:
   schedule:
-    # Roda a cada 3 dias às 08:00 UTC (05:00 horário de Brasília)
+    # Roda todo dia 5 vezes
     # Supabase pausa projetos free após 7 dias sem atividade
-    - cron: '0 8 * * *' 
+    - cron: '0 8,10,12,14,16 * * *' 
   workflow_dispatch: # permite rodar manualmente se precisar
 
 jobs:
