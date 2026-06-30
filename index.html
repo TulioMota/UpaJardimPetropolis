@@ -538,6 +538,36 @@
       font-weight: 500;
     }
 
+     /* ── LOGOS INSTITUCIONAIS ── */
+    .logos-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .logos-row img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(1.6) opacity(0.75);
+      transition: filter var(--transition);
+    }
+
+    .logos-row img:hover {
+      filter: grayscale(0%) brightness(1) opacity(1);
+    }
+
+    @media (max-width: 480px) {
+      .logos-row { gap: 20px; }
+      .logos-row img { height: 28px; }
+    }
+
     /* ── ANIMAÇÕES ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
@@ -653,7 +683,13 @@
       <div class="result-footer">Jardim Petrópolis · Betim · Minas Gerais</div>
     </div>
   </main>
-
+  
+  <!-- ── LOGOS INSTITUCIONAIS ── -->
+  <div class="logos-row" aria-hidden="true">
+    <img src="resource/prefeitura-betim.svg" alt="Prefeitura de Betim" loading="lazy" />
+    <img src="resource/puc-minas.png" alt="PUC Minas" loading="lazy" />
+  </div>
+  
   <footer>
     <p>Jardim Petrópolis · Betim · MG</p>
     <p style="margin-top:6px">Dúvidas? Fale com a administração da unidade (posto).</p>
