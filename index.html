@@ -538,6 +538,31 @@
       font-weight: 500;
     }
 
+    /* ── ASSINATURA ── */
+    .signature {
+      margin-top: 18px;
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    .signature strong {
+      color: var(--text-2);
+      font-weight: 500;
+    }
+
+    .signature a {
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .signature a:hover { color: var(--accent); }
+
+    .signature .sep {
+      margin: 0 6px;
+      opacity: 0.4;
+    }
+
      /* ── LOGOS INSTITUCIONAIS ── */
     .logos-row {
       display: flex;
@@ -699,6 +724,13 @@
       Prefeitura Municipal ou órgãos governamentais. Os dados aqui apresentados são simulados/públicos
       e servem apenas para fins pedagógicos.
     </div>
+    <p class="signature">
+      Desenvolvido por <strong>Túlio Mota</strong>
+      <span class="sep">·</span>
+      <a href="https://github.com/TulioMota/" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <span class="sep">·</span>
+      <a href="https://www.linkedin.com/in/tulio-mota/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </p>
   </footer>
 
   <!-- ── SUPABASE JS (CDN — versão fixada para evitar breaking changes) ── -->
