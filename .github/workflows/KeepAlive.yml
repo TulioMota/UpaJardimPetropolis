@@ -7,11 +7,17 @@ on:
     - cron: '0 8,10,12,14,16 * * *' 
   workflow_dispatch: # permite rodar manualmente se precisar
 
+permissions:
+  contents: write # necessário para o passo de commit automático poder dar push
+
 jobs:
   ping:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Ping Supabase
         env:
           SUPABASE_URL:      "https://vwpexqtezgptqnommvfk.supabase.co"
@@ -36,3 +42,18 @@ jobs:
             echo "⚠️ Resposta inesperada: $RESPONSE"
             exit 1
           fi
+
+      - name: Registrar atividade no repositório
+        run: |
+          mkdir -p .github/keep-alive
+          echo "Último ping: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/keep-alive/last-ping.txt
+
+      # Esse commit é o que impede o GitHub de desabilitar este workflow agendado.
+      # Regra do GitHub: cron é desativado automaticamente após 60 dias
+      # sem NENHUMA atividade (commit/push) no repositório — mesmo que o
+      # workflow em si continue rodando normalmente até esse momento.
+      - name: Commit de manutenção (mantém o cron ativo)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: keep-alive ping [skip ci]"
+          file_pattern: .github/keep-alive/last-ping.txt
